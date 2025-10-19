@@ -15,7 +15,7 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
+    <title>Detalles del Producto</title>
 </head>
 <body>
     <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
