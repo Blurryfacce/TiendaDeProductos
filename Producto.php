@@ -41,7 +41,16 @@ if($resulatodo && $resulatodo->num_rows > 0){
 }else{
     die("Producto no encontrado.");
 }
+$conexion->close();
 
+//Agregar al carro de compras
+if(isset($_POST['agregar_carro'])){
+    if(!isset($_SESSION['carro'])){
+        $_SESSION['carro'] = [];
+    }
+    // Agregar el producto al carro
+    $_SESSION['carro'][] = $producto;
+}
 ?>
 
 
@@ -57,11 +66,12 @@ if($resulatodo && $resulatodo->num_rows > 0){
     <h1>Detalles del Producto</h1>
 
     <h2><?php echo ($producto['nombre']); ?></h2>
+    <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'ID' : 'ID'; ?>:</strong> <?php echo ($producto['id']); ?></p>
     <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'Descripción' : 'Description'; ?>:</strong> <?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?></p>
     <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'Precio' : 'Price'; ?>:</strong> $<?php echo number_format($producto['precio'], 2); ?></p>
 
-    <form action="" method="post">
-        <button type="submit">Agregar al carro</button>
+    <form method="post">
+        <button type="submit" name="agregar_carro">Agregar al carro</button>
     </form>
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
