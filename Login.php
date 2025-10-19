@@ -1,5 +1,5 @@
 <?php
-$nombre = $clave = "";
+$usuario = $clave = "";
 $preferencias = false;
 
 if(isset($_COOKIE['c_recordarme'])){
@@ -23,7 +23,7 @@ if(isset($_COOKIE['c_recordarme'])){
     <form action="Panel_Principal.php" method="post">
         <fieldset>
             Usuario:<br>
-            <input type="text" name="usuario" value="<?php echo $nombre; ?>" id=""><br>
+            <input type="text" name="usuario" value="<?php echo $usuario; ?>" id=""><br>
             Clave:<br>
             <input type="password" name="clave" value="<?php echo $clave; ?>" id=""><br>
             <input type="checkbox" name="chkRecordarme" <?php echo $preferencias ? 'checked' : ''; ?>>Recuerdame<br>
