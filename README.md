@@ -1,2 +1,2 @@
 # TiendaDeProductos
-Aplicación web creada con PHP, HTML y CSS que simula una tienda.
+Aplicación web creada con PHP y HTML que simula una tienda.
