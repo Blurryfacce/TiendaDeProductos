@@ -1,11 +1,16 @@
 <?php
 $usuario = $clave = "";
 $preferencias = false;
+$idioma = "es"; // Por defecto español
 
 if(isset($_COOKIE['c_recordarme'])){
     $preferencias = true;
     $usuario = $_COOKIE['c_usuario'];
     $clave = $_COOKIE['c_clave'];
+}
+
+if(isset($_COOKIE['c_idioma'])){
+    $idioma = $_COOKIE['c_idioma'];
 }
 
 ?>
@@ -26,6 +31,11 @@ if(isset($_COOKIE['c_recordarme'])){
             <input type="text" name="usuario" value="<?php echo $usuario; ?>" id=""><br>
             Clave:<br>
             <input type="password" name="clave" value="<?php echo $clave; ?>" id=""><br>
+            Idioma / Language:<br>
+            <select name="idioma" id="idioma">
+                <option value="es" <?php echo ($idioma == 'es') ? 'selected' : ''; ?>>Español</option>
+                <option value="en" <?php echo ($idioma == 'en') ? 'selected' : ''; ?>>English</option>
+            </select><br>
             <input type="checkbox" name="chkRecordarme" <?php echo $preferencias ? 'checked' : ''; ?>>Recuerdame<br>
             <input type="submit" value="Enviar">
         </fieldset>

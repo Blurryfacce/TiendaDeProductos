@@ -6,27 +6,29 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
     //Poner en variables
     $usuario = $_POST['usuario'];
     $clave = $_POST['clave'];
-    $recordarme = isset($_POST['chkRecordarme']); 
+    $recordarme = isset($_POST['chkRecordarme']);
+    $idioma = isset($_POST['idioma']) ? $_POST['idioma'] : 'es';
+
+    // Guardar idioma en cookie
+    setcookie("c_idioma", $idioma, time() + (86400 * 30), "/"); // 30 días
 
     if($recordarme) {
         //Crear cookies
-        setcookie("c_usuario", $usuario, 0); 
-        setcookie("c_clave", $clave, 0); 
-        setcookie("c_recordarme", $recordarme, 0); 
-        //var_dump($_COOKIE);
+        setcookie("c_usuario", $usuario, time() + (86400 * 30), "/");
+        setcookie("c_clave", $clave, time() + (86400 * 30), "/");
+        setcookie("c_recordarme", $recordarme, time() + (86400 * 30), "/");
     }else {
-        //Borrar cualquier cookie que exista
-        if(isset($_COOKIE)){
-            foreach($_COOKIE as $name => $value){
-                setcookie($name, "", 1);  
-            }
-        }
+        //Borrar cookies de usuario y contraseña (mantener idioma)
+        setcookie("c_usuario", "", 1, "/");
+        setcookie("c_clave", "", 1, "/");
+        setcookie("c_recordarme", "", 1, "/");
     }
 
     if($_POST["usuario"] =="test" && $_POST["clave"]=="test123"){
         //Almacenar usuario en sesión
         $_SESSION['usuario'] = $usuario;
         $_SESSION['clave'] = $clave;
+        $_SESSION['idioma'] = $idioma;
     }else{
         header("Location:Login.php");
     }
@@ -36,6 +38,27 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
+
+// Conectar con la base de datos
+require_once 'BDD/Conexion.php';
+
+// Determinar idioma (de sesión, cookie o por defecto español)
+$idioma = 'es';
+if(isset($_SESSION['idioma'])){
+    $idioma = $_SESSION['idioma'];
+} elseif(isset($_COOKIE['c_idioma'])){
+    $idioma = $_COOKIE['c_idioma'];
+}
+
+// Seleccionar tabla según idioma
+$tabla = ($idioma == 'en') ? 'productosen' : 'productoses';
+$campo_nombre = ($idioma == 'en') ? 'name' : 'nombre';
+$campo_estado = ($idioma == 'en') ? 'status' : 'estado';
+$valor_activo = ($idioma == 'en') ? 'active' : 'activo';
+
+// Obtener productos de la base de datos según idioma
+$sql = "SELECT id_producto, $campo_nombre as nombre, precio, stock FROM $tabla WHERE $campo_estado = '$valor_activo' ORDER BY id_producto";
+$resultado = $conexion->query($sql);
 ?>
 
 
@@ -52,17 +75,24 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     <hr>
     
     <h2>Lista de Productos:</h2>
-    <ul>
-        <li><a href="Producto.php?id=1">Producto 1</a></li>
-        <li><a href="Producto.php?id=2">Producto 2</a></li>
-        <li><a href="Producto.php?id=3">Producto 3</a></li>
-        <li><a href="Producto.php?id=4">Producto 4</a></li>
-        <li><a href="Producto.php?id=5">Producto 5</a></li>
-        <li><a href="Producto.php?id=6">Producto 6</a></li>
-        <li><a href="Producto.php?id=7">Producto 7</a></li>
-        <li><a href="Producto.php?id=8">Producto 8</a></li>
-        <li><a href="Producto.php?id=9">Producto 9</a></li>
-    </ul>
+    <?php if($resultado && $resultado->num_rows > 0): ?>
+        <ul>
+            <?php while($producto = $resultado->fetch_assoc()): ?>
+                <li class="producto-item">
+                    <a href="Producto.php?id=<?php echo $producto['id_producto']; ?>">
+                        <?php echo htmlspecialchars($producto['nombre']); ?>
+                    </a>
+                    <span class="precio">- $<?php echo number_format($producto['precio'], 2); ?></span>
+                    <span class="stock">(Stock: <?php echo $producto['stock']; ?>)</span>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+    <?php else: ?>
+        <p>No hay productos disponibles.</p>
+    <?php endif; ?>
+    
+    <?php $conexion->close(); ?>
+    
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
     <br>
