@@ -43,9 +43,11 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
 
 //Gestión de idioma
 if(isset($_GET['lang'])){
-    $_SESSION['lang'] = $_GET['lang'];
-}else{
-    $_SESSION['lang'] = 'es';
+    setcookie("c_lang", $_GET['lang'], 0); 
+    $_COOKIE['c_lang'] = $_GET['lang']; // Para que la cookie esté disponible de inmediato
+}elseif(!isset($_COOKIE['c_lang'])){
+    setcookie("c_lang", 'es', 0); 
+    $_COOKIE['c_lang'] = 'es'; // Para que la cookie esté disponible de inmediato
 }
 
 //Conexion a la base de datos
@@ -56,10 +58,10 @@ $user = 'root';
 $clave = '';
 $base_datos = 'tienda';
 //Seleccionar tabla según idioma
-if($_SESSION['lang'] == 'es'){
-    $table = 'productoses';
-}elseif($_SESSION['lang'] == 'en'){
+if(isset($_COOKIE['c_lang']) && $_COOKIE['c_lang'] == 'en'){
     $table = 'productosen';
+}else{
+    $table = 'productoses';
 }
 $productos = [];
 
@@ -95,7 +97,7 @@ $conexion->close();
     <a href="Panel_Principal.php?lang=en">EN</a>
     <a href="Panel_Principal.php?lang=es">ES</a>
 
-    <h2><?php echo ($_SESSION['lang'] == 'es') ? 'Lista de Productos:' : 'Product List:'; ?></h2>
+    <h2><?php echo (isset($_COOKIE['c_lang']) && $_COOKIE['c_lang'] == 'en') ? 'Product List:' : 'Lista de Productos:'; ?></h2>
     <ul>
         <?php foreach($productos as $producto): ?>
             <li>
