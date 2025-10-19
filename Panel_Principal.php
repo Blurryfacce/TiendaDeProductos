@@ -27,6 +27,10 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         //Almacenar usuario en sesión
         $_SESSION['usuario'] = $usuario;
         $_SESSION['clave'] = $clave;
+        //Inicializar carro de compras
+        if(!isset($_SESSION['carro'])){
+            $_SESSION['carro'] = [];
+        }
     }else{
         header("Location:Login.php");
     }
@@ -36,6 +40,43 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
+
+//Gestión de idioma
+if(isset($_GET['lang'])){
+    $_SESSION['lang'] = $_GET['lang'];
+}else{
+    $_SESSION['lang'] = 'es';
+}
+
+//Conexion a la base de datos
+
+//Datos de conexión
+$host = 'localhost';
+$user = 'root';
+$clave = '';
+$base_datos = 'tienda';
+//Seleccionar tabla según idioma
+if($_SESSION['lang'] == 'es'){
+    $table = 'productoses';
+}elseif($_SESSION['lang'] == 'en'){
+    $table = 'productosen';
+}
+$productos = [];
+
+$conexion = new mysqli($host, $user, $clave, $base_datos) or die($conexion->connection_error);
+$consulta = "SELECT id, nombre FROM $table";
+$resulatodo = $conexion->query($consulta);
+if($resulatodo && $resulatodo->num_rows > 0){
+    while($fila = $resulatodo->fetch_assoc()){
+        $productos[] = [
+            'id' => $fila['id'],
+            'nombre' => $fila['nombre']
+        ];
+    }
+}else{
+    echo "No hay productos disponibles.";
+}
+$conexion->close();
 ?>
 
 
@@ -51,17 +92,18 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
     <hr>
     
-    <h2>Lista de Productos:</h2>
+    <a href="Panel_Principal.php?lang=en">EN</a>
+    <a href="Panel_Principal.php?lang=es">ES</a>
+
+    <h2><?php echo ($_SESSION['lang'] == 'es') ? 'Lista de Productos:' : 'Product List:'; ?></h2>
     <ul>
-        <li><a href="Producto.php?id=1">Producto 1</a></li>
-        <li><a href="Producto.php?id=2">Producto 2</a></li>
-        <li><a href="Producto.php?id=3">Producto 3</a></li>
-        <li><a href="Producto.php?id=4">Producto 4</a></li>
-        <li><a href="Producto.php?id=5">Producto 5</a></li>
-        <li><a href="Producto.php?id=6">Producto 6</a></li>
-        <li><a href="Producto.php?id=7">Producto 7</a></li>
-        <li><a href="Producto.php?id=8">Producto 8</a></li>
-        <li><a href="Producto.php?id=9">Producto 9</a></li>
+        <?php foreach($productos as $producto): ?>
+            <li>
+                <a href="Producto.php?id=<?php echo $producto['id']; ?>">
+                    <?php echo $producto['nombre']; ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
     </ul>
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
