@@ -78,6 +78,6 @@ if(isset($_POST['agregar_carro'])){
     <br>
     <a href="Carro_compra.php">Carro de compras</a>
     <br>
-    <a href="Login.php">Cerrar sesión</a>
+    <a href="Login.php?logout=true">Cerrar sesión</a>
 </body>
 </html>

@@ -2,12 +2,16 @@
 $usuario = $clave = "";
 $preferencias = false;
 
+session_start();
 if(isset($_COOKIE['c_recordarme'])){
     $preferencias = true;
     $usuario = $_COOKIE['c_usuario'];
     $clave = $_COOKIE['c_clave'];
 }
 
+if(isset($_GET['logout'])){
+    session_destroy();
+}
 ?>
 
 <!DOCTYPE html>

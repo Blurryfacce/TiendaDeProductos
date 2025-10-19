@@ -7,6 +7,14 @@ $usuario = $_SESSION['usuario'];
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
+
+//verificar si el carro de compras existe
+if(isset($_SESSION['carro']) && !empty($_SESSION['carro'])){
+    $carro = $_SESSION['carro'];
+} else {
+    $mensaje = "El carro de compras está vacío.";
+}
+
 ?>
 
 
@@ -21,15 +29,17 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
     <h1>Carro de Compras</h1>
     <ul>
-        <li>Producto 1</li>
-        <li>Producto 2</li>
-        <li>Producto 3</li>
+    <?php
+        foreach($carro as $item){
+            echo "<li>" . htmlspecialchars($item['id']) . " - " . htmlspecialchars($item['nombre']) . " - " . htmlspecialchars($item['descripcion']) . " - " . htmlspecialchars($item['precio']) . "</li>";
+        }
+    ?>
     </ul>
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
     <br>
     <a href="Carro_compra.php">Carro de compras</a>
     <br>
-    <a href="Login.php">Cerrar sesión</a>
+    <a href="Login.php?logout=true">Cerrar sesión</a>
 </body>
 </html>
