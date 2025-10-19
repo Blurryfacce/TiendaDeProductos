@@ -48,9 +48,15 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
         
         <h2>Lista de Productos:</h2>
         <ul>
-            <li>Producto 1</li>
-            <li>Producto 2</li>
-            <li>Producto 3</li>
+            <li><a href="Producto.php?id=1">Producto 1</a></li>
+            <li><a href="Producto.php?id=2">Producto 2</a></li>
+            <li><a href="Producto.php?id=3">Producto 3</a></li>
+            <li><a href="Producto.php?id=4">Producto 4</a></li>
+            <li><a href="Producto.php?id=5">Producto 5</a></li>
+            <li><a href="Producto.php?id=6">Producto 6</a></li>
+            <li><a href="Producto.php?id=7">Producto 7</a></li>
+            <li><a href="Producto.php?id=8">Producto 8</a></li>
+            <li><a href="Producto.php?id=9">Producto 9</a></li>
         </ul>
         <hr>
         <a href="Panel_Principal.php">Panel Principal</a>

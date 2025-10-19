@@ -18,6 +18,7 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     <title>Carro de Commpras</title>
 </head>
 <body>
+    <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
     <h1>Carro de Compras</h1>
     <ul>
         <li>Producto 1</li>
