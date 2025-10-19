@@ -21,7 +21,7 @@ INSERT INTO productoses (nombre, descripcion, precio) VALUES
 ('Zapatos', 'Zapatos deportivos unisex', 49.99);
 
 -- Insertar productos en inglés
-INSERT INTO productosen (name, description, price) VALUES
+INSERT INTO productosen (nombre, descripcion, precio) VALUES
 ('T-shirt', '100% cotton T-shirt', 15.99),
 ('Jeans', 'Blue denim jeans', 29.50),
 ('Sneakers', 'Unisex sports shoes', 49.99);
