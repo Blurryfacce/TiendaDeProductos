@@ -13,7 +13,9 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         setcookie("c_usuario", $usuario, 0); 
         setcookie("c_clave", $clave, 0); 
         setcookie("c_recordarme", $recordarme, 0); 
-        setcookie("c_lang", 'es', 0);
+        if(!isset($_COOKIE['c_lang'])){
+            setcookie("c_lang", 'es', 0);
+        }
     }else {
         //Borrar cualquier cookie que exista
         if(isset($_COOKIE)){
