@@ -13,7 +13,7 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         setcookie("c_usuario", $usuario, 0); 
         setcookie("c_clave", $clave, 0); 
         setcookie("c_recordarme", $recordarme, 0); 
-        //var_dump($_COOKIE);
+        setcookie("c_lang", 'es', 0);
     }else {
         //Borrar cualquier cookie que exista
         if(isset($_COOKIE)){

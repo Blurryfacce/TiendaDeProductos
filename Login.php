@@ -11,6 +11,11 @@ if(isset($_COOKIE['c_recordarme'])){
 
 if(isset($_GET['logout'])){
     session_destroy();
+    if(isset($_COOKIE)){
+        foreach($_COOKIE as $name => $value){
+            setcookie($name, "", 1);  
+        }
+    }
 }
 ?>
 
