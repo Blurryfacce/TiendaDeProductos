@@ -30,8 +30,12 @@ if(isset($_SESSION['carro']) && !empty($_SESSION['carro'])){
     <h1>Carro de Compras</h1>
     <ul>
     <?php
-        foreach($carro as $item){
-            echo "<li>" . htmlspecialchars($item['id']) . " - " . htmlspecialchars($item['nombre']) . " - " . htmlspecialchars($item['descripcion']) . " - " . htmlspecialchars($item['precio']) . "</li>";
+        if(!empty($carro)){
+            foreach($carro as $item){
+                echo "<li>" . htmlspecialchars($item['id']) . " - " . htmlspecialchars($item['nombre']) . " - " . htmlspecialchars($item['descripcion']) . " - " . htmlspecialchars($item['precio']) . "</li>";
+            }
+        }else{
+            echo "<li>" . htmlspecialchars($mensaje) . "</li>";
         }
     ?>
     </ul>
