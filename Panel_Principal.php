@@ -7,16 +7,15 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
     $usuario = $_POST['usuario'];
     $clave = $_POST['clave'];
     $recordarme = isset($_POST['chkRecordarme']);
-    $idioma = isset($_POST['idioma']) ? $_POST['idioma'] : 'es';
-
-    // Guardar idioma en cookie
-    setcookie("c_idioma", $idioma, time() + (86400 * 30), "/"); // 30 días
 
     if($recordarme) {
         //Crear cookies
         setcookie("c_usuario", $usuario, time() + (86400 * 30), "/");
         setcookie("c_clave", $clave, time() + (86400 * 30), "/");
         setcookie("c_recordarme", $recordarme, time() + (86400 * 30), "/");
+        if(!isset($_COOKIE['c_lang'])){
+            setcookie("c_lang", 'es', 0);
+        }
     }else {
         //Borrar cookies de usuario y contraseña (mantener idioma)
         setcookie("c_usuario", "", 1, "/");
@@ -30,35 +29,33 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         $_SESSION['clave'] = $clave;
         $_SESSION['idioma'] = $idioma;
     }else{
+        //Borrar cualquier cookie que exista
+        if(isset($_COOKIE)){
+            foreach($_COOKIE as $name => $value){
+                setcookie($name, "", 1);  
+            }
+        }
+    }
+
+     if($_POST["usuario"] =="test" && $_POST["clave"]=="test123"){
+        //Almacenar usuario en sesión
+        $_SESSION['usuario'] = $usuario;
+        $_SESSION['clave'] = $clave;
+        //Inicializar carro de compras
+        if(!isset($_SESSION['carro'])){
+            $_SESSION['carro'] = [];
+        }
+    }else{
         header("Location:Login.php");
     }
 }
-
 //Restricciones de punto de acceso
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
 
-// Conectar con la base de datos
-require_once 'BDD/Conexion.php';
 
-// Determinar idioma (de sesión, cookie o por defecto español)
-$idioma = 'es';
-if(isset($_SESSION['idioma'])){
-    $idioma = $_SESSION['idioma'];
-} elseif(isset($_COOKIE['c_idioma'])){
-    $idioma = $_COOKIE['c_idioma'];
-}
 
-// Seleccionar tabla según idioma
-$tabla = ($idioma == 'en') ? 'productosen' : 'productoses';
-$campo_nombre = ($idioma == 'en') ? 'name' : 'nombre';
-$campo_estado = ($idioma == 'en') ? 'status' : 'estado';
-$valor_activo = ($idioma == 'en') ? 'active' : 'activo';
-
-// Obtener productos de la base de datos según idioma
-$sql = "SELECT id_producto, $campo_nombre as nombre, precio, stock FROM $tabla WHERE $campo_estado = '$valor_activo' ORDER BY id_producto";
-$resultado = $conexion->query($sql);
 ?>
 
 
