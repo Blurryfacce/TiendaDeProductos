@@ -53,9 +53,43 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
+//Gestión de idioma
+if(isset($_GET['lang'])){
+    setcookie("c_lang", $_GET['lang'], 0); 
+    $_COOKIE['c_lang'] = $_GET['lang']; // Para que la cookie esté disponible de inmediato
+}elseif(!isset($_COOKIE['c_lang'])){
+    setcookie("c_lang", 'es', 0); 
+    $_COOKIE['c_lang'] = 'es'; // Para que la cookie esté disponible de inmediato
+}
+//Conexion a la base de datos
 
+//Datos de conexión
+$host = 'localhost';
+$user = 'root';
+$clave = '';
+$base_datos = 'tienda';
+//Seleccionar tabla según idioma
+if(isset($_COOKIE['c_lang']) && $_COOKIE['c_lang'] == 'en'){
+    $table = 'productosen';
+}else{
+    $table = 'productoses';
+}
+$productos = [];
 
-
+$conexion = new mysqli($host, $user, $clave, $base_datos) or die($conexion->connection_error);
+$consulta = "SELECT id, nombre FROM $table";
+$resulatodo = $conexion->query($consulta);
+if($resulatodo && $resulatodo->num_rows > 0){
+    while($fila = $resulatodo->fetch_assoc()){
+        $productos[] = [
+            'id' => $fila['id'],
+            'nombre' => $fila['nombre']
+        ];
+    }
+}else{
+    echo "No hay productos disponibles.";
+}
+$conexion->close();
 ?>
 
 
