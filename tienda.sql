@@ -41,7 +41,13 @@ CREATE TABLE `productosen` (
 INSERT INTO `productosen` (`id`, `nombre`, `descripcion`, `precio`) VALUES
 (1, 'T-shirt', '100% cotton T-shirt', 15.99),
 (2, 'Jeans', 'Blue denim jeans', 29.50),
-(3, 'Sneakers', 'Unisex sports shoes', 49.99);
+(3, 'Sneakers', 'Unisex sports shoes', 49.99),
+(4, 'Jacket', 'Waterproof winter jacket', 79.90),
+(5, 'Hat', 'Classic cotton baseball cap', 9.99),
+(6, 'Sunglasses', 'UV400 protection sunglasses', 19.99),
+(7, 'Backpack', 'Durable travel backpack', 39.50),
+(8, 'Watch', 'Digital wrist watch', 24.99);
+
 
 -- --------------------------------------------------------
 
@@ -63,7 +69,13 @@ CREATE TABLE `productoses` (
 INSERT INTO `productoses` (`id`, `nombre`, `descripcion`, `precio`) VALUES
 (1, 'Camiseta', 'Camiseta de algodón 100%', 15.99),
 (2, 'Pantalones', 'Pantalones de mezclilla azul', 29.50),
-(3, 'Zapatos', 'Zapatos deportivos unisex', 49.99);
+(3, 'Zapatos', 'Zapatos deportivos unisex', 49.99),
+(4, 'Chaqueta', 'Chaqueta impermeable de invierno', 79.90),
+(5, 'Gorra', 'Gorra clásica de algodón', 9.99),
+(6, 'Gafas de sol', 'Gafas de sol con protección UV400', 19.99),
+(7, 'Mochila', 'Mochila de viaje resistente', 39.50),
+(8, 'Reloj', 'Reloj de pulsera digital', 24.99);
+
 
 --
 -- Indexes for dumped tables
