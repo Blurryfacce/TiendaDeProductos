@@ -1,0 +1,54 @@
+
+ // Query para crear la tabla productoses
+
+CREATE TABLE productoses (
+  id_producto INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion TEXT,
+  precio DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  stock INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  codigo VARCHAR(50) UNIQUE,
+  imagen VARCHAR(255),
+  estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ // Query para crear la tabla productosen
+
+ CREATE TABLE productosen (
+  id_producto INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  stock INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  code VARCHAR(50) UNIQUE,
+  image VARCHAR(255),
+  status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Insertar productos en español
+INSERT INTO productoses (nombre, descripcion, precio, stock, codigo, estado) VALUES
+('Producto 1', 'Descripción del Producto 1', 99.99, 50, 'PROD001', 'activo'),
+('Producto 2', 'Descripción del Producto 2', 149.99, 30, 'PROD002', 'activo'),
+('Producto 3', 'Descripción del Producto 3', 199.99, 20, 'PROD003', 'activo'),
+('Producto 4', 'Descripción del Producto 4', 79.99, 40, 'PROD004', 'activo'),
+('Producto 5', 'Descripción del Producto 5', 129.99, 25, 'PROD005', 'activo'),
+('Producto 6', 'Descripción del Producto 6', 89.99, 35, 'PROD006', 'activo'),
+('Producto 7', 'Descripción del Producto 7', 179.99, 15, 'PROD007', 'activo'),
+('Producto 8', 'Descripción del Producto 8', 159.99, 28, 'PROD008', 'activo'),
+('Producto 9', 'Descripción del Producto 9', 119.99, 45, 'PROD009', 'activo');
+
+-- Insertar productos en inglés
+INSERT INTO productosen (name, description, price, stock, code, status) VALUES
+('Product 1', 'Description of Product 1', 99.99, 50, 'PROD001', 'active'),
+('Product 2', 'Description of Product 2', 149.99, 30, 'PROD002', 'active'),
+('Product 3', 'Description of Product 3', 199.99, 20, 'PROD003', 'active'),
+('Product 4', 'Description of Product 4', 79.99, 40, 'PROD004', 'active'),
+('Product 5', 'Description of Product 5', 129.99, 25, 'PROD005', 'active'),
+('Product 6', 'Description of Product 6', 89.99, 35, 'PROD006', 'active'),
+('Product 7', 'Description of Product 7', 179.99, 15, 'PROD007', 'active'),
+('Product 8', 'Description of Product 8', 159.99, 28, 'PROD008', 'active'),
+('Product 9', 'Description of Product 9', 119.99, 45, 'PROD009', 'active');

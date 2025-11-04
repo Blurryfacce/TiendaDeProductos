@@ -6,17 +6,30 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
     //Poner en variables
     $usuario = $_POST['usuario'];
     $clave = $_POST['clave'];
-    $recordarme = isset($_POST['chkRecordarme']); 
+    $recordarme = isset($_POST['chkRecordarme']);
 
     if($recordarme) {
         //Crear cookies
         setcookie("c_usuario", $usuario, 0); 
         setcookie("c_clave", $clave, 0); 
         setcookie("c_recordarme", $recordarme, 0); 
+
         if(!isset($_COOKIE['c_lang'])){
             setcookie("c_lang", 'es', 0);
         }
     }else {
+        //Borrar cookies de usuario y contraseña (mantener idioma)
+        setcookie("c_usuario", "", 1, "/");
+        setcookie("c_clave", "", 1, "/");
+        setcookie("c_recordarme", "", 1, "/");
+    }
+
+    if($_POST["usuario"] =="test" && $_POST["clave"]=="test123"){
+        //Almacenar usuario en sesión
+        $_SESSION['usuario'] = $usuario;
+        $_SESSION['clave'] = $clave;
+        $_SESSION['idioma'] = $idioma;
+    }else{
         //Borrar cualquier cookie que exista
         if(isset($_COOKIE)){
             foreach($_COOKIE as $name => $value){
@@ -25,7 +38,7 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         }
     }
 
-    if($_POST["usuario"] =="test" && $_POST["clave"]=="test123"){
+     if($_POST["usuario"] =="test" && $_POST["clave"]=="test123"){
         //Almacenar usuario en sesión
         $_SESSION['usuario'] = $usuario;
         $_SESSION['clave'] = $clave;
@@ -37,7 +50,6 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
         header("Location:Login.php");
     }
 }
-
 //Restricciones de punto de acceso
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
@@ -51,7 +63,6 @@ if(isset($_GET['lang'])){
     setcookie("c_lang", 'es', 0); 
     $_COOKIE['c_lang'] = 'es'; // Para que la cookie esté disponible de inmediato
 }
-
 //Conexion a la base de datos
 
 //Datos de conexión

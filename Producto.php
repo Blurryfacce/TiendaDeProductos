@@ -1,11 +1,10 @@
 <?php
 session_start();
-//Poner en variables
-$usuario = $_SESSION['usuario'];
 
 //Restricciones de punto de acceso
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
+    exit;
 }
 
 //Gestión de idioma desde cookie
