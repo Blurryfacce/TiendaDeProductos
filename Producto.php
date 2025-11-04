@@ -7,53 +7,49 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     exit;
 }
 
-// Inicializar el carrito si no existe
-if(!isset($_SESSION['carrito'])){
-    $_SESSION['carrito'] = array();
+//Gestión de idioma desde cookie
+if(!isset($_COOKIE['c_lang'])){
+    setcookie("c_lang", 'es', 0);
 }
 
-// Procesar agregar al carrito
-if(isset($_POST['agregar_carrito'])){
-    $id_agregar = intval($_POST['id_producto']);
-    
-    // Si el producto ya está en el carrito, aumentar cantidad
-    if(isset($_SESSION['carrito'][$id_agregar])){
-        $_SESSION['carrito'][$id_agregar] += 1;
-    } else {
-        $_SESSION['carrito'][$id_agregar] = 1;
+//Conexion a la base de datos
+
+//Datos de conexión
+$host = 'localhost';
+$user = 'root';
+$clave = '';
+$base_datos = 'tienda';
+//Seleccionar tabla según idioma
+if(isset($_COOKIE['c_lang']) && $_COOKIE['c_lang'] == 'en'){
+    $table = 'productosen';
+}else{
+    $table = 'productoses';
+}
+
+$conexion = new mysqli($host, $user, $clave, $base_datos) or die($conexion->connection_error);
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+}else{
+    die("No se ha proporcionado un ID de producto.");
+}
+$consulta = "SELECT * FROM $table WHERE id = $id";
+$resulatodo = $conexion->query($consulta);
+
+if($resulatodo && $resulatodo->num_rows > 0){
+    $producto = $resulatodo->fetch_assoc();
+}else{
+    die("Producto no encontrado.");
+}
+$conexion->close();
+
+//Agregar al carro de compras
+if(isset($_POST['agregar_carro'])){
+    if(!isset($_SESSION['carro'])){
+        $_SESSION['carro'] = [];
     }
-    
-    $mensaje = "Producto agregado al carrito exitosamente!";
+    // Agregar el producto al carro
+    $_SESSION['carro'][] = $producto;
 }
-
-// Conectar con la base de datos
-require_once 'BDD/Conexion.php';
-
-// Obtener el ID del producto
-$id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-// Determinar idioma (de sesión, cookie o por defecto español)
-$idioma = 'es';
-if(isset($_SESSION['idioma'])){
-    $idioma = $_SESSION['idioma'];
-} elseif(isset($_COOKIE['c_idioma'])){
-    $idioma = $_COOKIE['c_idioma'];
-}
-
-// Consultar los detalles del producto según idioma
-if($idioma == 'en'){
-    $sql = "SELECT id_producto, name as nombre, description as descripcion, price as precio, stock, code as codigo 
-            FROM productosen WHERE id_producto = ? AND status = 'active'";
-} else {
-    $sql = "SELECT id_producto, nombre, descripcion, precio, stock, codigo 
-            FROM productoses WHERE id_producto = ? AND estado = 'activo'";
-}
-
-$stmt = $conexion->prepare($sql);
-$stmt->bind_param("i", $id_producto);
-$stmt->execute();
-$resultado = $stmt->get_result();
-$producto = $resultado->fetch_assoc();
 ?>
 
 
@@ -67,37 +63,20 @@ $producto = $resultado->fetch_assoc();
 <body>
     <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
     <h1>Detalles del Producto</h1>
-    
-    <?php if(isset($mensaje)): ?>
-        <p style="color: green;"><strong><?php echo $mensaje; ?></strong></p>
-    <?php endif; ?>
-    
-    <?php if($producto): ?>
-        <h2>ID: <?php echo $producto['id_producto']; ?></h2>
-        <h2>Nombre: <?php echo htmlspecialchars($producto['nombre']); ?></h2>
-        <p><strong>Descripción:</strong> <?php echo htmlspecialchars($producto['descripcion']); ?></p>
-        <p><strong>Precio:</strong> $<?php echo number_format($producto['precio'], 2); ?></p>
-        <p><strong>Código:</strong> <?php echo htmlspecialchars($producto['codigo']); ?></p>
-        <p><strong>Stock:</strong> <?php echo $producto['stock']; ?> unidades</p>
-        
-        <form method="POST" action="">
-            <input type="hidden" name="id_producto" value="<?php echo $producto['id_producto']; ?>">
-            <button type="submit" name="agregar_carrito">Agregar al carro</button>
-        </form>
-    <?php else: ?>
-        <p style="color: red;">Producto no encontrado o no disponible.</p>
-    <?php endif; ?>
-    
-    <?php 
-    $stmt->close();
-    $conexion->close(); 
-    ?>
 
+    <h2><?php echo ($producto['nombre']); ?></h2>
+    <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'ID' : 'ID'; ?>:</strong> <?php echo ($producto['id']); ?></p>
+    <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'Descripción' : 'Description'; ?>:</strong> <?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?></p>
+    <p><strong><?php echo ($_COOKIE['c_lang'] == 'es') ? 'Precio' : 'Price'; ?>:</strong> $<?php echo number_format($producto['precio'], 2); ?></p>
+
+    <form method="post">
+        <button type="submit" name="agregar_carro">Agregar al carro</button>
+    </form>
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
     <br>
     <a href="Carro_compra.php">Carro de compras</a>
     <br>
-    <a href="Login.php">Cerrar sesión</a>
+    <a href="Login.php?logout=true">Cerrar sesión</a>
 </body>
 </html>

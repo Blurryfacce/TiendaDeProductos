@@ -3,14 +3,22 @@ $usuario = $clave = "";
 $preferencias = false;
 $idioma = "es"; // Por defecto español
 
+session_start();
 if(isset($_COOKIE['c_recordarme'])){
     $preferencias = true;
     $usuario = $_COOKIE['c_usuario'];
     $clave = $_COOKIE['c_clave'];
 }
 
-if(isset($_COOKIE['c_idioma'])){
-    $idioma = $_COOKIE['c_idioma'];
+if(isset($_GET['logout'])){
+    session_destroy();
+    if(!isset($_COOKIE['c_recordarme'])){
+        if(isset($_COOKIE)){
+            foreach($_COOKIE as $name => $value){
+                setcookie($name, "", 1);  
+            }
+        }
+    }
 }
 
 ?>

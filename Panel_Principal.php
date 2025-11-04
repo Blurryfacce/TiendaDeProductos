@@ -10,9 +10,10 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
 
     if($recordarme) {
         //Crear cookies
-        setcookie("c_usuario", $usuario, time() + (86400 * 30), "/");
-        setcookie("c_clave", $clave, time() + (86400 * 30), "/");
-        setcookie("c_recordarme", $recordarme, time() + (86400 * 30), "/");
+        setcookie("c_usuario", $usuario, 0); 
+        setcookie("c_clave", $clave, 0); 
+        setcookie("c_recordarme", $recordarme, 0); 
+
         if(!isset($_COOKIE['c_lang'])){
             setcookie("c_lang", 'es', 0);
         }
@@ -53,6 +54,7 @@ if(isset($_POST['usuario']) && isset($_POST['clave'])){
 if(!isset($_SESSION['usuario']) || !isset($_SESSION['clave'])){
     header("Location:Login.php");
 }
+
 //Gestión de idioma
 if(isset($_GET['lang'])){
     setcookie("c_lang", $_GET['lang'], 0); 
@@ -105,30 +107,24 @@ $conexion->close();
     <h2>Bienvenido usuario: <?php echo $_SESSION['usuario']; ?></h2>
     <hr>
     
-    <h2>Lista de Productos:</h2>
-    <?php if($resultado && $resultado->num_rows > 0): ?>
-        <ul>
-            <?php while($producto = $resultado->fetch_assoc()): ?>
-                <li class="producto-item">
-                    <a href="Producto.php?id=<?php echo $producto['id_producto']; ?>">
-                        <?php echo htmlspecialchars($producto['nombre']); ?>
-                    </a>
-                    <span class="precio">- $<?php echo number_format($producto['precio'], 2); ?></span>
-                    <span class="stock">(Stock: <?php echo $producto['stock']; ?>)</span>
-                </li>
-            <?php endwhile; ?>
-        </ul>
-    <?php else: ?>
-        <p>No hay productos disponibles.</p>
-    <?php endif; ?>
-    
-    <?php $conexion->close(); ?>
-    
+    <a href="Panel_Principal.php?lang=en">EN</a>
+    <a href="Panel_Principal.php?lang=es">ES</a>
+
+    <h2><?php echo (isset($_COOKIE['c_lang']) && $_COOKIE['c_lang'] == 'en') ? 'Product List:' : 'Lista de Productos:'; ?></h2>
+    <ul>
+        <?php foreach($productos as $producto): ?>
+            <li>
+                <a href="Producto.php?id=<?php echo $producto['id']; ?>">
+                    <?php echo $producto['nombre']; ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
     <hr>
     <a href="Panel_Principal.php">Panel Principal</a>
     <br>
     <a href="Carro_compra.php">Carro de compras</a>
     <br>
-    <a href="Login.php">Cerrar sesión</a>
+    <a href="Login.php?logout=true">Cerrar sesión</a>
 </body>
 </html>
